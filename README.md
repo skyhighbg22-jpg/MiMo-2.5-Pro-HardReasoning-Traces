@@ -142,4 +142,10 @@ Edit `ENTRY_TARGET` and `MAX_WORKERS` in the script to control the output size a
 
 ## License
 
-This dataset is provided as-is for research purposes.
+This dataset is licensed under **CC BY-NC 4.0** (Creative Commons Attribution-NonCommercial 4.0 International).
+
+You are free to share and adapt this material for non-commercial purposes, provided you give appropriate credit to the original author (**Sky**).
+
+For commercial use, please contact the author.
+
+[![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc/4.0/)

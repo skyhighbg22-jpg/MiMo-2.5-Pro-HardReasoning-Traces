@@ -24,7 +24,7 @@ BATCH_SIZE = 15
 RATE_LIMIT_DELAY = 2
 
 # Entry Target (set to 0 to use TOKEN_LIMIT instead)
-ENTRY_TARGET = 7278
+ENTRY_TARGET = 10000
 
 # Output Paths
 DATASET_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -301,6 +301,258 @@ def gen_system_architecture_scenario():
     return "distributed_system_architecture", problem
 
 
+def gen_fourier_transform_problem():
+    n = random.choice([4, 8])
+    signal = [random.randint(-10, 10) for _ in range(n)]
+    signal_str = ", ".join(map(str, signal))
+    problem = (
+        f"Given the discrete signal x[n] = {{{signal_str}}} of length N = {n}:\n\n"
+        f"1. Compute the Discrete Fourier Transform (DFT) X[k] manually by expanding the summation formula X[k] = Σ x[n] * e^(-j*2π*k*n/N) for each k = 0, 1, ..., {n-1}.\n"
+        f"2. Calculate the magnitude spectrum |X[k]| and phase spectrum ∠X[k] for each frequency bin.\n"
+        f"3. Verify Parseval's theorem: Σ|x[n]|² = (1/N) Σ|X[k]|².\n"
+        f"4. Compute the Inverse DFT to reconstruct x[n] from X[k], confirming perfect reconstruction.\n"
+        f"5. If this signal is sampled at {random.choice([8000, 16000, 44100])} Hz, determine the analog frequency corresponding to each spectral bin."
+    )
+    return "signal_processing_and_transforms", problem
+
+
+def gen_bayesian_inference_problem():
+    prior_a = random.choice([2, 3, 5])
+    prior_b = random.choice([3, 5, 7])
+    n_trials = random.randint(20, 100)
+    n_success = random.randint(5, n_trials - 5)
+    problem = (
+        f"A pharmaceutical company tests a new drug. Historically, the success rate θ follows a Beta({prior_a}, {prior_b}) prior distribution.\n"
+        f"In a clinical trial of {n_trials} patients, {n_success} show positive outcomes.\n\n"
+        f"1. Derive the posterior distribution p(θ|data) using Bayes' theorem with the conjugate Beta-Binomial model.\n"
+        f"2. Calculate the posterior mean, mode, and 95% credible interval for θ.\n"
+        f"3. Compute the posterior predictive probability that the next {random.randint(3, 10)} patients will all show positive outcomes.\n"
+        f"4. Perform a Bayes factor analysis comparing H₀: θ ≤ 0.5 vs H₁: θ > 0.5. State your conclusion.\n"
+        f"5. Derive the Jeffreys prior for this model and recompute the posterior, comparing it with the informative prior result."
+    )
+    return "bayesian_statistics_and_inference", problem
+
+
+def gen_graph_coloring_problem():
+    n_nodes = random.choice([5, 6, 7])
+    edges = []
+    for i in range(n_nodes):
+        for j in range(i + 1, n_nodes):
+            if random.random() < 0.5:
+                edges.append((i, j))
+    if len(edges) < n_nodes:
+        for i in range(n_nodes - 1):
+            edges.append((i, i + 1))
+        edges = list(set(edges))
+    edges_str = ", ".join([f"({u},{v})" for u, v in edges])
+    k_colors = random.choice([3, 4])
+    problem = (
+        f"Consider an undirected graph G = (V, E) with {n_nodes} vertices labeled 0 to {n_nodes-1}.\n"
+        f"Edges: E = {{{edges_str}}}\n\n"
+        f"1. Determine the chromatic number χ(G) of this graph. Prove your answer by providing a valid coloring and showing fewer colors are impossible.\n"
+        f"2. Using the greedy coloring algorithm with vertex ordering 0, 1, ..., {n_nodes-1}, find a valid {k_colors}-coloring (if possible) or prove it cannot be done.\n"
+        f"3. Compute the chromatic polynomial P(G, k) for k = {k_colors} using the deletion-contraction method.\n"
+        f"4. Determine if G is planar. If it is, verify the four-color theorem. If not, find a K₅ or K₃,₃ subdivision.\n"
+        f"5. Calculate the number of distinct valid {k_colors}-colorings accounting for color permutations."
+    )
+    return "graph_theory_and_coloring", problem
+
+
+def gen_rsa_cryptography_problem():
+    p = random.choice([61, 67, 71, 73, 79, 83, 89, 97])
+    q = random.choice([101, 103, 107, 109, 113, 127, 131, 137])
+    while q == p:
+        q = random.choice([101, 103, 107, 109, 113, 127, 131, 137])
+    n = p * q
+    phi = (p - 1) * (q - 1)
+    e = random.choice([17, 65537])
+    problem = (
+        f"In the RSA cryptosystem, two primes are chosen as p = {p} and q = {q}.\n\n"
+        f"1. Compute n = p * q and Euler's totient φ(n) = (p-1)(q-1).\n"
+        f"2. Given public exponent e = {e}, verify that gcd(e, φ(n)) = 1 using the Extended Euclidean Algorithm.\n"
+        f"3. Compute the private decryption exponent d such that e * d ≡ 1 (mod φ(n)). Show all steps of the modular inverse computation.\n"
+        f"4. Encrypt the message M = {random.randint(2, min(n-1, 5000))} by computing C = M^e mod n using repeated squaring. Show each step.\n"
+        f"5. Decrypt C to recover M by computing M = C^d mod n. Verify the original message is recovered.\n"
+        f"6. Explain why RSA is secure and discuss the role of integer factorization. What happens if p and q are too close together (Fermat factorization vulnerability)?"
+    )
+    return "number_theory_and_rsa", problem
+
+
+def gen_heat_equation_problem():
+    L = random.choice([1, 2, 3])
+    alpha = round(random.uniform(0.1, 2.0), 2)
+    T_0 = random.randint(50, 200)
+    n_terms = random.choice([3, 5])
+    problem = (
+        f"Solve the 1D heat equation ∂u/∂t = {alpha} * ∂²u/∂x² on the domain 0 ≤ x ≤ {L}, t ≥ 0 with:\n"
+        f"- Boundary conditions: u(0, t) = 0, u({L}, t) = 0 (Dirichlet)\n"
+        f"- Initial condition: u(x, 0) = {T_0} * sin(πx/{L}) + {random.randint(20, 80)} * sin(3πx/{L})\n\n"
+        f"1. Apply separation of variables u(x,t) = X(x)T(t) and derive the general solution as a Fourier sine series.\n"
+        f"2. Apply the initial condition to find all Fourier coefficients. Show the orthogonality integrals explicitly.\n"
+        f"3. Write the complete solution with the first {n_terms} terms of the series.\n"
+        f"4. Calculate the temperature at x = {L}/2, t = {round(random.uniform(0.1, 2.0), 2)} to 4 decimal places.\n"
+        f"5. Determine the thermal diffusivity time constant and estimate when the system reaches 99% of steady state."
+    )
+    return "partial_differential_equations", problem
+
+
+def gen_quantum_circuit_problem():
+    problem = (
+        f"Design and analyze a quantum circuit for the following task:\n\n"
+        f"1. Construct a 2-qubit quantum circuit that implements the Controlled-NOT (CNOT) gate using only single-qubit gates (H, T, T†) and CNOT gates. Draw the circuit diagram.\n"
+        f"2. Starting from the state |00⟩, apply a Hadamard gate to qubit 1, then a CNOT gate (control=qubit 1, target=qubit 2). Write the resulting 4-dimensional state vector.\n"
+        f"3. Prove this creates a maximally entangled Bell state by computing the reduced density matrix of each qubit and showing the von Neumann entropy is log(2).\n"
+        f"4. Design a quantum circuit for the Deutsch-Jozsa algorithm with {random.choice([2, 3])} qubits. Prove it determines whether f is constant or balanced in a single query.\n"
+        f"5. Implement the quantum Fourier transform (QFT) for {random.choice([2, 3])} qubits. Write the unitary matrix and verify it is unitary (U†U = I).\n"
+        f"6. Calculate the circuit depth and gate count of your QFT implementation and compare with the classical FFT complexity."
+    )
+    return "quantum_computing_and_circuits", problem
+
+
+def gen_neural_network_backprop_problem():
+    layers = random.choice([[2, 3, 1], [2, 4, 2, 1], [3, 5, 3, 1]])
+    layers_str = " → ".join(map(str, layers))
+    lr = round(random.uniform(0.01, 0.5), 2)
+    problem = (
+        f"Consider a fully-connected feedforward neural network with architecture: {layers_str} (input → hidden → output).\n"
+        f"Use the sigmoid activation function σ(z) = 1/(1+e^(-z)) for all layers and mean squared error loss.\n\n"
+        f"1. Initialize all weights from Uniform(-0.5, 0.5) and biases to 0. Write the forward pass equations layer by layer.\n"
+        f"2. Given input x = [{round(random.uniform(0, 1), 2)}, {round(random.uniform(0, 1), 2)}] and target y = {round(random.uniform(0, 1), 2)}, compute the network output and loss.\n"
+        f"3. Derive the backpropagation equations from scratch using the chain rule. Compute ∂L/∂w and ∂L/∂b for every weight and bias in the network.\n"
+        f"4. Perform one step of gradient descent with learning rate η = {lr}. Report the updated weights.\n"
+        f"5. Recompute the loss after the weight update. Did the loss decrease? If not, explain why and what learning rate adjustments are needed.\n"
+        f"6. Derive the vanishing gradient problem: compute the gradient magnitude at the first layer and explain why deep networks with sigmoid activations train slowly."
+    )
+    return "neural_network_architecture_and_training", problem
+
+
+def gen_circuit_analysis_problem():
+    V = random.choice([5, 9, 12, 24])
+    R1 = random.choice([100, 220, 330, 470, 1000])
+    R2 = random.choice([100, 220, 330, 470, 1000])
+    R3 = random.choice([100, 220, 330, 470, 1000])
+    problem = (
+        f"Analyze the following electrical circuit using Kirchhoff's laws:\n"
+        f"- A voltage source V = {V}V is connected in series with resistor R₁ = {R1}Ω.\n"
+        f"- After R₁, the circuit splits into two parallel branches:\n"
+        f"  Branch A: R₂ = {R2}Ω\n"
+        f"  Branch B: R₃ = {R3}Ω in series with a second voltage source V₂ = {random.choice([3, 5])}V (opposing polarity)\n"
+        f"- The parallel branches rejoin and return to the main source.\n\n"
+        f"1. Draw the circuit and label all components, currents, and voltage drops.\n"
+        f"2. Apply Kirchhoff's Voltage Law (KVL) to write the loop equations for both independent loops.\n"
+        f"3. Apply Kirchhoff's Current Law (KCL) at the junction node.\n"
+        f"4. Solve the system of linear equations to find all branch currents I₁, I₂, I₃.\n"
+        f"5. Calculate the power dissipated in each resistor and the power supplied by each source.\n"
+        f"6. Verify conservation of energy: total power supplied = total power dissipated.\n"
+        f"7. Compute the Thevenin equivalent circuit as seen from R₂'s terminals."
+    )
+    return "electrical_circuit_analysis", problem
+
+
+def gen_automata_theory_problem():
+    n_states = random.choice([3, 4])
+    alphabet = ['a', 'b']
+    transitions = {}
+    for s in range(n_states):
+        for c in alphabet:
+            transitions[(s, c)] = random.randint(0, n_states - 1)
+    accept_states = random.sample(range(n_states), random.randint(1, n_states - 1))
+    trans_str = "\n".join([f"  δ({s}, '{c}') = {t}" for (s, c), t in sorted(transitions.items())])
+    problem = (
+        f"Consider a Deterministic Finite Automaton (DFA) M = (Q, Σ, δ, q₀, F) where:\n"
+        f"- Q = {{q₀, q₁, ...q{n_states-1}}}\n"
+        f"- Σ = {{a, b}}\n"
+        f"- q₀ is the start state\n"
+        f"- F = {{{', '.join([f'q{s}' for s in accept_states])}}}\n"
+        f"- Transition function δ:\n{trans_str}\n\n"
+        f"1. Draw the state transition diagram for this DFA.\n"
+        f"2. Construct the transition table and determine if each of these strings is accepted: 'abba', 'bab', '{''.join(random.choices(alphabet, k=random.randint(3, 6)))}'.\n"
+        f"3. Construct the complement DFA M̄ that accepts exactly the strings rejected by M.\n"
+        f"4. Convert this DFA to a regular expression using the state elimination method. Show each elimination step.\n"
+        f"5. Construct an equivalent NFA with fewer states (if possible) and prove equivalence.\n"
+        f"6. Apply the Myhill-Nerode theorem to determine the minimum-state DFA equivalent to M. Identify all distinguishable state pairs."
+    )
+    return "automata_and_formal_languages", problem
+
+
+def gen_portfolio_optimization_problem():
+    n_assets = random.choice([3, 4])
+    returns = [round(random.uniform(0.02, 0.15), 4) for _ in range(n_assets)]
+    variances = [round(random.uniform(0.01, 0.08), 4) for _ in range(n_assets)]
+    correlations = []
+    for i in range(n_assets):
+        row = []
+        for j in range(n_assets):
+            if i == j:
+                row.append(1.0)
+            elif j > i:
+                row.append(round(random.uniform(-0.3, 0.7), 2))
+            else:
+                row.append(correlations[j][i])
+        correlations.append(row)
+    cov_matrix = []
+    for i in range(n_assets):
+        row = []
+        for j in range(n_assets):
+            row.append(round(variances[i] ** 0.5 * variances[j] ** 0.5 * correlations[i][j], 6))
+        cov_matrix.append(row)
+    problem = (
+        f"Consider a portfolio optimization problem with {n_assets} assets.\n"
+        f"Expected annual returns: μ = {returns}\n"
+        f"Variances: σ² = {variances}\n"
+        f"Covariance matrix Σ:\n"
+        + "\n".join([f"  [{', '.join([f'{v:.4f}' for v in row])}]" for row in cov_matrix]) +
+        f"\n\n"
+        f"1. Formulate the Markowitz mean-variance optimization as a quadratic programming problem: minimize w^T Σ w subject to w^T μ = μ_target and Σwᵢ = 1.\n"
+        f"2. Derive the efficient frontier analytically using Lagrange multipliers. Show all matrix algebra.\n"
+        f"3. Find the minimum variance portfolio weights and its expected return and risk.\n"
+        f"4. If the risk-free rate is {round(random.uniform(0.01, 0.04), 3)}, find the tangency portfolio (maximum Sharpe ratio).\n"
+        f"5. Plot the efficient frontier and identify the capital market line.\n"
+        f"6. Apply the Black-Litterman model: if an investor believes Asset 1 will return {round(random.uniform(0.05, 0.20), 2)} with {round(random.uniform(0.3, 0.8), 2)} confidence, derive the adjusted equilibrium returns."
+    )
+    return "portfolio_optimization_and_finance", problem
+
+
+def gen_monte_carlo_integration_problem():
+    dim = random.choice([2, 3])
+    n_samples = random.choice([10000, 100000])
+    if dim == 2:
+        func_str = f"f(x,y) = exp(-(x² + y²))"
+        region = "unit disk x² + y² ≤ 1"
+    else:
+        func_str = f"f(x,y,z) = exp(-(x² + y² + z²))"
+        region = "unit sphere x² + y² + z² ≤ 1"
+    problem = (
+        f"Estimate the integral of {func_str} over the {region} using Monte Carlo methods.\n\n"
+        f"1. Derive the crude Monte Carlo estimator: I ≈ (V/N) Σ f(xᵢ), where V is the volume of the region. State the theoretical variance of this estimator.\n"
+        f"2. Implement importance sampling using a Gaussian proposal distribution N(0, σ²I). Derive the optimal σ and the resulting variance reduction ratio.\n"
+        f"3. Generate {n_samples} uniform random samples inside the region using rejection sampling. Calculate the acceptance ratio.\n"
+        f"4. Compute the integral estimate, standard error, and 95% confidence interval from your samples.\n"
+        f"5. Compare with the analytical result (which involves the error function). Calculate the relative error.\n"
+        f"6. Implement stratified sampling by dividing the region into {random.choice([4, 8, 16])} equal-volume strata. Show the variance reduction compared to crude Monte Carlo."
+    )
+    return "numerical_methods_and_monte_carlo", problem
+
+
+def gen_wave_equation_problem():
+    L = random.choice([1, 2])
+    c = random.choice([1, 2, 3])
+    n_modes = random.choice([3, 5])
+    problem = (
+        f"Solve the 1D wave equation ∂²u/∂t² = {c}² * ∂²u/∂x² on 0 ≤ x ≤ {L}, t ≥ 0 with:\n"
+        f"- Boundary conditions: u(0, t) = 0, u({L}, t) = 0 (fixed ends)\n"
+        f"- Initial conditions: u(x, 0) = {random.randint(1, 5)} * sin(πx/{L}) + {random.randint(1, 3)} * sin(2πx/{L})\n"
+        f"  ∂u/∂t(x, 0) = 0 (released from rest)\n\n"
+        f"1. Apply separation of variables and derive the general solution as a superposition of normal modes.\n"
+        f"2. Compute all Fourier coefficients from the initial conditions. Show the orthogonality integrals.\n"
+        f"3. Write the complete solution with the first {n_modes} modes.\n"
+        f"4. Calculate the fundamental frequency and all harmonic frequencies of this vibrating string.\n"
+        f"5. Compute the total energy E = ∫(½(∂u/∂t)² + ½c²(∂u/∂x)²)dx and prove it is conserved over time.\n"
+        f"6. At what time t > 0 does the string first return exactly to its initial shape? Prove your answer."
+    )
+    return "wave_physics_and_acoustics", problem
+
+
 THEORETICAL_TOPICS = [
     "geometry_and_topology", "relativity_and_astrophysics", "thermodynamics_and_statistical_mechanics",
     "particle_and_nuclear_physics", "organic_and_physical_chemistry", "biochemistry_and_molecular_biology",
@@ -308,7 +560,11 @@ THEORETICAL_TOPICS = [
     "distributed_systems_and_cloud", "cryptography_and_security", "compilers_and_programming_languages",
     "artificial_intelligence_and_ml", "operating_systems_and_networking", "formal_logic_and_set_theory",
     "analytical_philosophy_and_epistemology", "game_theory_and_decision_theory", "linguistics_and_formal_semantics",
-    "quantitative_finance_and_economics", "control_systems_and_information_theory"
+    "quantitative_finance_and_economics", "control_systems_and_information_theory",
+    "signal_processing_and_transforms", "bayesian_statistics_and_inference", "graph_theory_and_coloring",
+    "number_theory_and_rsa", "partial_differential_equations", "quantum_computing_and_circuits",
+    "neural_network_architecture_and_training", "electrical_circuit_analysis", "automata_and_formal_languages",
+    "portfolio_optimization_and_finance", "numerical_methods_and_monte_carlo", "wave_physics_and_acoustics"
 ]
 
 SUB_TOPICS = {
@@ -763,6 +1019,270 @@ SUB_TOPICS = {
         "deriving the differential entropy of continuous multivariate normal distributions",
         "analyzing the water-filling algorithm for optimal power allocation across channels",
         "designing model predictive control (MPC) frameworks under state constraints"
+    ],
+    "signal_processing_and_transforms": [
+        "deriving the Fast Fourier Transform (FFT) algorithm and analyzing its computational complexity",
+        "proving the Nyquist-Shannon sampling theorem and deriving anti-aliasing filter specifications",
+        "designing FIR and IIR digital filters using windowing methods (Hamming, Kaiser)",
+        "deriving the Short-Time Fourier Transform (STFT) and analyzing the time-frequency uncertainty principle",
+        "implementing the Welch method for power spectral density estimation from noisy signals",
+        "designing adaptive filters using the Least Mean Squares (LMS) algorithm",
+        "deriving the Wavelet transform and constructing multi-resolution analysis using Daubechies wavelets",
+        "analyzing the Z-transform and deriving the transfer function of discrete-time systems",
+        "designing Kalman-Bucy filters for optimal linear filtering of stochastic signals",
+        "deriving the cepstral analysis method for speech processing and homomorphic deconvolution",
+        "proving the convolution theorem and its applications in fast polynomial multiplication",
+        "designing matched filters for optimal signal detection in additive white Gaussian noise",
+        "analyzing compressed sensing theory and proving RIP (Restricted Isometry Property) conditions",
+        "deriving MUSIC and ESPRIT algorithms for high-resolution direction-of-arrival estimation",
+        "implementing the Goertzel algorithm for efficient single-frequency DFT computation",
+        "designing multirate signal processing systems (decimation, interpolation, polyphase filters)",
+        "deriving the discrete cosine transform (DCT) and its application in JPEG compression",
+        "analyzing cyclostationary signal processing and spectral correlation functions",
+        "designing beamforming algorithms for phased array antenna systems",
+        "deriving the Chirp Z-transform and its advantages over standard DFT for zoom-in analysis"
+    ],
+    "bayesian_statistics_and_inference": [
+        "deriving the posterior predictive distribution for hierarchical Bayesian models",
+        "implementing Markov Chain Monte Carlo (MCMC) using the Metropolis-Hastings algorithm",
+        "designing Bayesian neural networks with weight uncertainty using variational inference",
+        "deriving the Evidence Lower Bound (ELBO) for Variational Autoencoders",
+        "implementing Gibbs sampling for Bayesian Gaussian mixture models",
+        "proving convergence guarantees of MCMC chains using ergodic theory",
+        "designing Bayesian optimization with Gaussian process surrogates for black-box functions",
+        "deriving the Bayesian information criterion (BIC) and comparing with AIC for model selection",
+        "implementing Hamiltonian Monte Carlo (HMC) and the No-U-Turn Sampler (NUTS)",
+        "analyzing Bayesian hypothesis testing using Bayes factors and Savage-Dickey density ratios",
+        "designing Bayesian clinical trials with adaptive sample size re-estimation",
+        "deriving empirical Bayes estimates using the James-Stein shrinkage estimator",
+        "implementing particle filters (Sequential Monte Carlo) for state-space models",
+        "proving the Bernstein-von Mises theorem on posterior asymptotic normality",
+        "designing Bayesian nonparametric models using the Dirichlet Process",
+        "deriving conjugate prior families for exponential family distributions",
+        "implementing expectation propagation (EP) for approximate Bayesian inference",
+        "analyzing prior sensitivity and deriving robust Bayesian methods using ε-contamination classes",
+        "designing Bayesian optimization for hyperparameter tuning of deep learning models",
+        "deriving the posterior distribution for Gaussian process regression with noisy observations"
+    ],
+    "graph_theory_and_coloring": [
+        "proving Brooks' theorem on the chromatic number of connected graphs",
+        "deriving the Tutte polynomial and calculating it for specific graph families",
+        "proving the max-flow min-cut theorem using linear programming duality",
+        "designing approximation algorithms for the maximum independent set problem",
+        "deriving spectral graph theory bounds using eigenvalues of the adjacency matrix",
+        "proving Hall's marriage theorem and its applications to bipartite matching",
+        "implementing the Hopcroft-Karp algorithm for maximum bipartite matching",
+        "analyzing random graphs (Erdős-Rényi model) and proving threshold phenomena",
+        "deriving the matrix tree theorem for counting spanning trees",
+        "proving Vizing's theorem: every simple graph has edge-chromatic number Δ or Δ+1",
+        "designing algorithms for finding minimum dominating sets in graphs",
+        "implementing Dijkstra's and A* algorithms and analyzing optimality conditions",
+        "proving Dilworth's theorem on chain decompositions of partially ordered sets",
+        "analyzing expander graphs and proving their spectral gap properties",
+        "deriving the genus of a graph and embedding it on higher-genus surfaces",
+        "designing algorithms for graph isomorphism testing (Weisfeiler-Leman refinement)",
+        "proving the Hajós conjecture for specific graph classes",
+        "implementing the Stoer-Wagner algorithm for minimum global cut",
+        "analyzing network centrality measures (betweenness, closeness, eigenvector)",
+        "deriving the relationship between treewidth and graph minor theory"
+    ],
+    "number_theory_and_rsa": [
+        "proving the Miller-Rabin primality test and analyzing its error probability",
+        "implementing the AKS primality test and proving its polynomial-time complexity",
+        "deriving the quadratic sieve algorithm for integer factorization",
+        "proving the law of quadratic reciprocity using Gauss sums",
+        "implementing elliptic curve factorization method (Lenstra's ECM)",
+        "deriving the Riemann zeta function's Euler product formula and its connection to primes",
+        "proving Dirichlet's theorem on primes in arithmetic progressions",
+        "implementing the baby-step giant-step algorithm for discrete logarithms",
+        "deriving the Pohlig-Hellman algorithm for discrete logarithms in composite-order groups",
+        "proving the Chinese Remainder Theorem constructively and analyzing computational complexity",
+        "implementing Schoof's algorithm for counting points on elliptic curves over finite fields",
+        "deriving the number field sieve and analyzing its sub-exponential complexity",
+        "proving Fermat's Last Theorem for n=3 using infinite descent",
+        "analyzing pseudorandom number generators based on the Blum-Blum-Shub construction",
+        "deriving continued fraction expansions and their application to Pell's equation",
+        "implementing the Lenstra-Lenstra-Lovász (LLL) lattice reduction algorithm",
+        "proving the prime number theorem using complex analytic methods",
+        "deriving modular forms and their connection to elliptic curves (modularity theorem)",
+        "analyzing the security of Diffie-Hellman key exchange under the discrete log assumption",
+        "implementing Paillier homomorphic encryption and proving its semantic security"
+    ],
+    "partial_differential_equations": [
+        "solving the 2D Laplace equation on a rectangular domain using separation of variables",
+        "deriving the method of characteristics for first-order quasi-linear PDEs",
+        "solving the Burgers' equation using the Cole-Hopf transformation",
+        "proving existence and uniqueness of solutions to the Navier-Stokes equations (weak solutions)",
+        "deriving finite difference schemes for the heat equation and analyzing stability (CFL condition)",
+        "implementing the finite element method (FEM) for 2D Poisson equation on triangular meshes",
+        "solving the Schrödinger equation for the hydrogen atom and deriving orbital shapes",
+        "deriving the Green's function for the Helmholtz equation in 2D and 3D",
+        "analyzing shock wave formation in the inviscid Burgers' equation using Rankine-Hugoniot conditions",
+        "implementing spectral methods for solving PDEs using Chebyshev collocation",
+        "deriving the variational formulation of elasticity theory (Lamé equations)",
+        "solving the Black-Scholes PDE for European option pricing using Crank-Nicolson scheme",
+        "proving maximum principles for harmonic functions and their applications",
+        "deriving the weak formulation of elliptic PDEs and proving Lax-Milgram theorem",
+        "implementing multigrid methods for solving large sparse systems from PDE discretization",
+        "analyzing dispersive wave equations and deriving the group velocity dispersion relation",
+        "solving the Fokker-Planck equation for Brownian motion with drift",
+        "deriving level set methods for tracking moving interfaces and fronts",
+        "implementing immersed boundary methods for fluid-structure interaction problems",
+        "proving regularity estimates for solutions of second-order elliptic PDEs"
+    ],
+    "quantum_computing_and_circuits": [
+        "deriving the quantum teleportation protocol and proving its fidelity is unity",
+        "implementing Shor's algorithm for factoring 15 on a quantum circuit simulator",
+        "proving the no-cloning theorem and its implications for quantum cryptography",
+        "designing quantum error correction codes (Shor code, Steane code, surface codes)",
+        "deriving Grover's search algorithm and proving the quadratic speedup is optimal",
+        "implementing the Variational Quantum Eigensolver (VQE) for molecular ground state energy",
+        "proving quantum entanglement violates Bell inequalities (CHSH inequality)",
+        "designing quantum approximate optimization algorithm (QAOA) for MaxCut",
+        "deriving the density matrix formalism and quantum channel representations (Kraus operators)",
+        "implementing quantum phase estimation for eigenvalue problems",
+        "proving the Solovay-Kitaev theorem for universal quantum gate approximation",
+        "designing topological quantum computing using anyonic braiding operations",
+        "deriving quantum key distribution (BB84 protocol) and proving its information-theoretic security",
+        "implementing the Harrow-Hassidim-Lloyd (HHL) algorithm for linear systems",
+        "analyzing quantum decoherence models (amplitude damping, phase damping channels)",
+        "deriving the stabilizer formalism for quantum error-correcting codes",
+        "designing quantum walk algorithms for graph search problems",
+        "proving the Gottesman-Knill theorem for efficient classical simulation of Clifford circuits",
+        "implementing variational quantum classifiers for machine learning tasks",
+        "deriving the threshold theorem for fault-tolerant quantum computation"
+    ],
+    "neural_network_architecture_and_training": [
+        "deriving the universal approximation theorem for single-hidden-layer networks",
+        "proving convergence guarantees of SGD for non-convex neural network optimization",
+        "designing residual networks (ResNet) and deriving the gradient flow through skip connections",
+        "implementing the Transformer architecture from scratch including multi-head attention",
+        "deriving batch normalization equations and analyzing internal covariate shift",
+        "designing Graph Neural Networks (GNNs) using message passing neural network framework",
+        "implementing contrastive learning (SimCLR, MoCo) and deriving the InfoNCE loss",
+        "deriving the reparameterization trick for training variational autoencoders",
+        "designing neural architecture search (NAS) using differentiable architecture search (DARTS)",
+        "proving Lipschitz bounds of neural networks and their implications for robustness",
+        "implementing Mixture of Experts (MoE) models and deriving the load balancing loss",
+        "deriving the attention mechanism mathematically and analyzing its computational complexity",
+        "designing normalizing flows (RealNVP, Glow) for tractable density estimation",
+        "implementing reinforcement learning from human feedback (RLHF) with PPO",
+        "deriving the neural tangent kernel (NTK) for infinite-width network analysis",
+        "designing diffusion models (DDPM) and deriving the variational lower bound",
+        "implementing knowledge distillation for model compression with temperature scaling",
+        "deriving spectral normalization for stabilizing GAN training",
+        "designing vision transformers (ViT) and analyzing patch embedding mathematics",
+        "proving memorization capacity bounds for overparameterized neural networks"
+    ],
+    "electrical_circuit_analysis": [
+        "deriving the mesh analysis and nodal analysis methods for AC circuits with phasors",
+        "designing active filters (Butterworth, Chebyshev) using operational amplifiers",
+        "analyzing transistor amplifier circuits (CE, CB, CC) using small-signal models",
+        "deriving the telegrapher's equations for transmission line analysis",
+        "designing switching power supply circuits (buck, boost, buck-boost converters)",
+        "analyzing mutual inductance and transformer equivalent circuits",
+        "deriving the two-port network parameters (Z, Y, ABCD, S parameters)",
+        "designing oscillator circuits (Colpitts, Hartley, Wien bridge) and analyzing startup conditions",
+        "analyzing CMOS inverter circuits and deriving the voltage transfer characteristic",
+        "designing differential amplifier circuits and calculating CMRR",
+        "deriving the maximum power transfer theorem for AC circuits with complex impedances",
+        "analyzing three-phase power systems and calculating balanced/unbalanced loads",
+        "designing PLL (phase-locked loop) circuits and analyzing loop dynamics",
+        "deriving the Miller effect and its impact on amplifier bandwidth",
+        "analyzing diode circuits (clippers, clampers, rectifiers) with piecewise linear models",
+        "designing current mirror circuits for integrated circuit biasing",
+        "deriving the noise figure cascade formula for multi-stage amplifier chains",
+        "analyzing sampling circuits and deriving the aperture jitter noise limits",
+        "designing impedance matching networks using Smith chart analysis",
+        "deriving switching transient analysis for RL and RC circuits with time-varying sources"
+    ],
+    "automata_and_formal_languages": [
+        "proving the pumping lemma for regular languages and using it to show non-regularity",
+        "deriving the Chomsky normal form conversion for context-free grammars",
+        "proving the undecidability of the halting problem using diagonalization",
+        "implementing the CYK parsing algorithm for context-free grammars",
+        "deriving Rabin's theorem: all properties of regular languages are decidable",
+        "proving Rice's theorem and its implications for program verification",
+        "designing pushdown automata for context-free languages and proving equivalence with CFGs",
+        "implementing the Earley parser for general context-free grammars",
+        "proving the equivalence of Turing machines and lambda calculus (Church-Turing thesis)",
+        "deriving the Chomsky hierarchy and proving strict containment of language classes",
+        "designing two-way finite automata and proving they recognize only regular languages",
+        "implementing Brzozowski's algorithm for DFA minimization using derivatives",
+        "proving Savitch's theorem: NSPACE(s(n)) ⊆ DSPACE(s(n)²)",
+        "deriving the Immerman-Szelepcsényi theorem: NL = coNL",
+        "designing alternating Turing machines and analyzing the alternation hierarchy",
+        "proving the Cook-Levin theorem with full reduction from NP to SAT",
+        "implementing tree automata for XML document validation",
+        "deriving Büchi automata for linear temporal logic (LTL) model checking",
+        "proving the decidability of Presburger arithmetic and its complexity",
+        "designing quantum finite automata and comparing with classical language recognition"
+    ],
+    "portfolio_optimization_and_finance": [
+        "deriving the Capital Asset Pricing Model (CAPM) from market equilibrium",
+        "proving the fundamental theorem of asset pricing (no-arbitrage ⟵⟹ equivalent martingale measure)",
+        "deriving the Heston stochastic volatility model and semi-analytical option pricing",
+        "implementing Monte Carlo simulation for pricing path-dependent exotic options",
+        "deriving the Vasicek and Cox-Ingersoll-Ross interest rate models",
+        "proving the put-call parity and deriving bounds on option prices",
+        "designing delta-hedging strategies and deriving the Greeks (delta, gamma, vega, theta, rho)",
+        "deriving the Kelly criterion for optimal bet sizing in repeated investments",
+        "implementing the binomial options pricing model and proving convergence to Black-Scholes",
+        "analyzing credit risk using the Merton structural model and deriving default probabilities",
+        "deriving the Heath-Jarrow-Morton (HJM) framework for forward rate modeling",
+        "implementing Value at Risk (VaR) and Conditional VaR using historical and parametric methods",
+        "deriving the Garman-Kohlhagen model for foreign exchange option pricing",
+        "analyzing market microstructure models and deriving optimal execution algorithms",
+        "proving the efficient market hypothesis implications using martingale theory",
+        "deriving the Fama-French three-factor and five-factor asset pricing models",
+        "implementing copula models for multivariate dependency in financial returns",
+        "designing risk parity portfolios and deriving the equal risk contribution algorithm",
+        "deriving the SABR model for stochastic volatility smile interpolation",
+        "analyzing jump-diffusion models (Merton, Kou) and deriving characteristic functions for pricing"
+    ],
+    "numerical_methods_and_monte_carlo": [
+        "proving convergence rates of Newton's method for non-linear systems",
+        "implementing the Runge-Kutta-Fehlberg adaptive step-size ODE solver",
+        "deriving the conjugate gradient method for symmetric positive definite systems",
+        "proving stability and convergence of finite difference schemes for hyperbolic PDEs",
+        "implementing the Nelder-Mead simplex method for derivative-free optimization",
+        "deriving Gaussian quadrature rules and proving optimal polynomial exactness",
+        "implementing the Arnoldi iteration for large-scale eigenvalue problems",
+        "proving the convergence of the Jacobi and Gauss-Seidel iterative methods",
+        "deriving Richardson extrapolation and its application to Romberg integration",
+        "implementing the biconjugate gradient stabilized (BiCGSTAB) method for non-symmetric systems",
+        "proving the Lax equivalence theorem: consistency + stability ⟺ convergence",
+        "deriving spline interpolation (cubic, B-spline) and proving minimum curvature property",
+        "implementing the simplex method for linear programming and analyzing pivot strategies",
+        "proving the convergence of simulated annealing using Markov chain theory",
+        "deriving the fast multipole method (FMM) for N-body gravitational simulations",
+        "implementing Anderson acceleration for fixed-point iterations",
+        "proving error bounds for polynomial interpolation (Runge's phenomenon, Chebyshev nodes)",
+        "deriving the boundary element method (BEM) for solving Laplace equation",
+        "implementing automatic differentiation (forward and reverse mode) from scratch",
+        "deriving randomized SVD algorithms and proving approximation guarantees"
+    ],
+    "wave_physics_and_acoustics": [
+        "deriving the Doppler effect for both source and observer motion in 3D",
+        "solving the electromagnetic wave equation from Maxwell's equations in vacuum",
+        "deriving Fresnel equations for reflection and transmission at dielectric interfaces",
+        "analyzing diffraction patterns using the Fraunhofer and Fresnel approximations",
+        "deriving the acoustic wave equation in heterogeneous media",
+        "proving Snell's law from Fermat's principle of least time",
+        "designing impedance matching layers for ultrasonic transducers",
+        "deriving the dispersion relation for surface waves (Rayleigh waves) on elastic solids",
+        "analyzing wave propagation in periodic structures (photonic crystals, Bragg gratings)",
+        "deriving the Korteweg-de Vries (KdV) equation for shallow water solitary waves",
+        "implementing the finite-difference time-domain (FDTD) method for electromagnetic simulation",
+        "proving the reciprocity theorem for acoustic and electromagnetic waves",
+        "deriving the beam propagation method for paraxial wave optics",
+        "analyzing normal modes of vibration in rectangular and circular cavities",
+        "deriving the Lippmann-Schwinger equation for acoustic scattering problems",
+        "designing acoustic metamaterials with negative effective density and bulk modulus",
+        "deriving the Bloch theorem for wave propagation in periodic media",
+        "analyzing nonlinear wave phenomena: harmonic generation and self-phase modulation",
+        "deriving the WKB approximation for wave propagation in slowly varying media",
+        "implementing boundary element methods for acoustic radiation and scattering"
     ]
 }
 
@@ -771,7 +1291,12 @@ PROMPT_TEMPLATES = [
     "Draft a comprehensive, highly technical analysis of {sub_topic}. Include a thorough mathematical or structural breakdown, investigate edge cases, explain your internal model and assumptions, and formulate the exact reasoning trace.",
     "Formulate a complete proof or systemic design for the following topic: {sub_topic}. Provide a step-by-step logical derivation of every lemma, axiom, or engineering trade-off. Show all intermediate steps and detail your thinking process clearly.",
     "Deconstruct {sub_topic} down to its fundamental principles. Propose a complex scenario or concrete math puzzle within this area, then solve it rigorously. Make sure to detail your internal reasoning, corrections, and logical flow.",
-    "Provide an expert-level, detailed tutorial solving {sub_topic}. Frame a difficult, non-trivial hypothetical problem first, then detail the step-by-step mathematical or architectural reasoning to resolve it."
+    "Provide an expert-level, detailed tutorial solving {sub_topic}. Frame a difficult, non-trivial hypothetical problem first, then detail the step-by-step mathematical or architectural reasoning to resolve it.",
+    "You are a professor writing a graduate-level exam question on {sub_topic}. First, design a challenging multi-part problem that tests deep understanding. Then solve it completely, showing every derivation, proof step, and edge case analysis.",
+    "I need an exhaustive technical reference on {sub_topic}. Start from first principles, derive all key equations or algorithms from scratch, prove correctness or convergence where applicable, and illustrate with a concrete worked example.",
+    "Simulate being a senior researcher peer-reviewing a paper on {sub_topic}. Identify the hardest open question or most subtle technical challenge in this area, then provide a complete solution with full mathematical rigor.",
+    "Build a complete case study around {sub_topic}. Define a realistic scenario with specific parameters, then walk through the entire solution process: modeling, analysis, computation, verification, and interpretation of results.",
+    "Treat {sub_topic} as a systems design challenge. Start with requirements gathering, then perform a rigorous mathematical or algorithmic analysis of the design space, prove optimality of your chosen approach, and validate with detailed calculations."
 ]
 
 PROCEDURAL_GENERATORS = [
@@ -787,6 +1312,18 @@ PROCEDURAL_GENERATORS = [
     gen_combinatorics_counting_problem,
     gen_physics_problem,
     gen_system_architecture_scenario,
+    gen_fourier_transform_problem,
+    gen_bayesian_inference_problem,
+    gen_graph_coloring_problem,
+    gen_rsa_cryptography_problem,
+    gen_heat_equation_problem,
+    gen_quantum_circuit_problem,
+    gen_neural_network_backprop_problem,
+    gen_circuit_analysis_problem,
+    gen_automata_theory_problem,
+    gen_portfolio_optimization_problem,
+    gen_monte_carlo_integration_problem,
+    gen_wave_equation_problem,
 ]
 
 

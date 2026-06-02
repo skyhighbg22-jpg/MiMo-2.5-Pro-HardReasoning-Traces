@@ -15,18 +15,14 @@ size_categories:
 
 # MiMo-2.5-Pro-HardReasoning-Traces
 
-A large-scale reasoning dataset of **4,713 expert-level prompts** with full reasoning traces across 32 academic and technical topics, generated using the **MiMo-v2.5-Pro** model. Each entry contains the step-by-step reasoning chain alongside the final completion, suitable for training and evaluating reasoning capabilities in language models.
+A large-scale reasoning dataset of **6,779 expert-level prompts** with full reasoning traces across 44 academic and technical topics, generated using the **MiMo-v2.5-Pro** model. Each entry contains the step-by-step reasoning chain alongside the final completion, suitable for training and evaluating reasoning capabilities in language models.
 
 ## Dataset Statistics
 
 | Metric | Value |
 |---|---|
-| Total entries | 4,713 |
-| Total tokens | 27,104,198 |
-| Prompt tokens | 1,771,339 |
-| Completion tokens | 25,332,859 |
-| Reasoning tokens | 16,542,264 |
-| Unique topics | 32 |
+| Total entries | 6,779 |
+| Unique topics | 44 |
 
 ## File Structure
 
@@ -36,7 +32,8 @@ README.md                 # Dataset documentation
 LICENSE                   # CC BY-NC 4.0 license
 reasoning_data_1.jsonl    # Entries 1-2000
 reasoning_data_2.jsonl    # Entries 2001-4000
-reasoning_data_3.jsonl    # Entries 4001-4713
+reasoning_data_3.jsonl    # Entries 4001-6000
+reasoning_data_4.jsonl    # Entries 6001-6779
 generate_dataset.py       # Dataset generator script
 test_api.py               # API connectivity test
 test_concurrent.py        # Concurrency test
@@ -82,6 +79,7 @@ Each entry in the JSONL files contains:
 - `relativity_and_astrophysics` - General relativity, cosmology, black holes
 - `thermodynamics_and_statistical_mechanics` - Entropy, partition functions, phase transitions
 - `particle_and_nuclear_physics` - QED, QCD, nuclear physics, Feynman diagrams
+- `wave_physics_and_acoustics` - Wave equation, Doppler effect, diffraction, metamaterials
 
 ### Computer Science
 - `algorithms_and_complexity` - NP-completeness, approximation algorithms, randomized algorithms
@@ -93,18 +91,37 @@ Each entry in the JSONL files contains:
 - `operating_systems_and_networking` - TCP congestion control, virtual memory, scheduling
 - `control_systems_and_information_theory` - Kalman filter, channel capacity, water-filling
 - `distributed_system_architecture` - Large-scale system design (telemetry ingestion)
+- `automata_and_formal_languages` - DFA/NFA, Turing machines, pumping lemma, Chomsky hierarchy
+- `neural_network_architecture_and_training` - Backprop, transformers, attention, RLHF, diffusion models
 
 ### Life Sciences
 - `biochemistry_and_molecular_biology` - GPCRs, metabolic pathways, photosynthesis
 - `genetics_and_bioinformatics` - Sequence alignment, GWAS, transposable elements
 - `organic_and_physical_chemistry` - NMR spectroscopy, catalytic mechanisms, molecular orbitals
 
+### Signal Processing & Numerical Methods
+- `signal_processing_and_transforms` - FFT, wavelets, FIR/IIR filters, compressed sensing
+- `numerical_methods_and_monte_carlo` - Monte Carlo integration, Runge-Kutta, conjugate gradient
+
+### Statistics & Inference
+- `bayesian_statistics_and_inference` - MCMC, variational inference, Bayes factors, Gaussian processes
+
+### Electrical Engineering
+- `electrical_circuit_analysis` - Kirchhoff's laws, Thevenin equivalent, transistor amplifiers
+
+### Quantum Computing
+- `quantum_computing_and_circuits` - Quantum teleportation, Shor's algorithm, error correction
+
 ### Other
 - `analytical_philosophy_and_epistemology` - Consciousness, free will, epistemology
 - `game_theory_and_decision_theory` - Nash equilibria, mechanism design, auction theory
 - `linguistics_and_formal_semantics` - Syntax, phonology, formal semantics
 - `quantitative_finance_and_economics` - Black-Scholes, DSGE models, portfolio optimization
+- `portfolio_optimization_and_finance` - Markowitz, Black-Litterman, delta-hedging, Kelly criterion
 - `geometry_and_topology` - Gauss-Bonnet theorem, fundamental groups, homology
+- `graph_theory_and_coloring` - Chromatic number, planarity, spectral graph theory
+- `number_theory_and_rsa` - RSA, primality testing, integer factorization, elliptic curves
+- `partial_differential_equations` - Heat equation, wave equation, FEM, Navier-Stokes
 
 ## Prompt Types
 
@@ -122,7 +139,7 @@ The dataset contains two types of prompts:
 import json
 
 entries = []
-for i in range(1, 4):
+for i in range(1, 5):
     with open(f"reasoning_data_{i}.jsonl", "r") as f:
         for line in f:
             entries.append(json.loads(line))

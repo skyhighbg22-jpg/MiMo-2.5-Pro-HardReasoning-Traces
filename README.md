@@ -136,7 +136,7 @@ print(f"Loaded {len(entries)} entries")
 ```python
 from datasets import load_dataset
 
-ds = load_dataset("skyhighbg22-jpg/MiMo-2.5-Pro-HardReasoning-Traces")
+ds = load_dataset("Skyhigh-2203/MiMo-2.5-Pro-HardReasoning-Traces")
 ```
 
 ## Generation

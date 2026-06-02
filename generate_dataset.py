@@ -27,11 +27,9 @@ RATE_LIMIT_DELAY = 2
 ENTRY_TARGET = 7278
 
 # Output Paths
-DATASET_DIR = r"c:\Users\Skyhi\OneDrive\Desktop\dataset\apex_reasoning_dataset"
+DATASET_DIR = os.path.dirname(os.path.abspath(__file__))
 MANIFEST_PATH = os.path.join(DATASET_DIR, "manifest.json")
 LOCK_PATH = os.path.join(DATASET_DIR, ".generator.lock")
-
-os.makedirs(DATASET_DIR, exist_ok=True)
 
 ssl_context = ssl._create_unverified_context()
 

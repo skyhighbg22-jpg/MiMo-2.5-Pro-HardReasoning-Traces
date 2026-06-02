@@ -16,11 +16,13 @@ A large-scale reasoning dataset of **4,713 expert-level prompts** with full reas
 ## File Structure
 
 ```
-apex_reasoning_dataset/
-  manifest.json           # Dataset metadata and statistics
-  reasoning_data_1.jsonl  # Entries 1-2000
-  reasoning_data_2.jsonl  # Entries 2001-4000
-  reasoning_data_3.jsonl  # Entries 4001-4713
+.gitattributes            # Git LFS tracking rules
+README.md                 # Dataset documentation
+LICENSE                   # CC BY-NC 4.0 license
+manifest.json             # Dataset metadata and statistics
+reasoning_data_1.jsonl    # Entries 1-2000
+reasoning_data_2.jsonl    # Entries 2001-4000
+reasoning_data_3.jsonl    # Entries 4001-4713
 generate_dataset.py       # Dataset generator script
 test_api.py               # API connectivity test
 test_concurrent.py        # Concurrency test
@@ -107,7 +109,7 @@ import json
 
 entries = []
 for i in range(1, 4):
-    with open(f"apex_reasoning_dataset/reasoning_data_{i}.jsonl", "r") as f:
+    with open(f"reasoning_data_{i}.jsonl", "r") as f:
         for line in f:
             entries.append(json.loads(line))
 

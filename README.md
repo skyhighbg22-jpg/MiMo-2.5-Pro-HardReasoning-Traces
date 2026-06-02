@@ -1,3 +1,18 @@
+---
+language:
+- en
+license: cc-by-nc-4.0
+task_categories:
+- text-generation
+- question-answering
+tags:
+- reasoning
+- chain-of-thought
+- mimo
+size_categories:
+- 1K<n<10K
+---
+
 # MiMo-2.5-Pro-HardReasoning-Traces
 
 A large-scale reasoning dataset of **4,713 expert-level prompts** with full reasoning traces across 32 academic and technical topics, generated using the **MiMo-v2.5-Pro** model. Each entry contains the step-by-step reasoning chain alongside the final completion, suitable for training and evaluating reasoning capabilities in language models.
